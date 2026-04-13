@@ -1,0 +1,15 @@
+API AXIOS:
+frontend -->500 api --> header
+axios interceptor: request interceptor, response interceptor
+
+
+browser stoge:
+localstorage:
+cookie: http cookie only
+
+expense manger applicaiton:
+login -->sigh --> 
+dashboard ---> add expense --> view expense --> edit expense --> delete expense,manage category
+
+ADMIN:
+USER:
