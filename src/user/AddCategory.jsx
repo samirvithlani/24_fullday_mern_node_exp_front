@@ -9,6 +9,7 @@ export const AddCategory = () => {
         //api
         const res = await axios.post("/expCat/",data)
         console.log(res)
+        //status check -= -->201 --->navigate -->my-categories -->toster
     }
   return (
     <div>
@@ -16,7 +17,7 @@ export const AddCategory = () => {
         <form onSubmit={handleSubmit(submitHanlder)}>
             <div>
                 <label htmlFor="name">Category Name</label>
-                <input type="text" id="name" {...register("name")} />
+                <input type="text" id="name" {...register("catName")} />
             </div>
             <div>
                 <lable>DESCRIPTION</lable>
