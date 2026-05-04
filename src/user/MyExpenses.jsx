@@ -16,6 +16,14 @@ export const MyExpenses = () => {
             setLoading(false)
         }
     }
+    const searchHanlder=async(e)=>{
+        console.log(e.target.value)
+        const res = await axiosInstance.get("/exp/search?expName="+e.target.value)
+        console.log(res.data.data) //sa -->[]
+        setExpenses(res.data.data) //replace with search data [1]
+        
+        
+    }
 
    
     useEffect(() => {
@@ -31,6 +39,10 @@ export const MyExpenses = () => {
                         Total Records: {expenses.length}
                     </span>
                 </div>
+                <div>
+                    <label>Search</label>
+                    <input type="text" onChange={(e)=>{searchHanlder(e)}}></input>
+                    </div>
 
                 <div className="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
                     <div className="overflow-x-auto">
