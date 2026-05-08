@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import axiosInstance from '../api/axiosInstance'
+import { ArrowBigUp, ArrowDown, ArrowUp } from 'lucide-react'
 
 export const MyExpenses = () => {
     const [expenses, setExpenses] = useState([])
     const [loading, setLoading] = useState(true)
+    const [sort, setsort] = useState(1)
+    const [dateSort, setdateSort] = useState(1)
 
     const getMyExpenses = async () => {
         try {
-            const res = await axiosInstance.get("/exp/expbyuserid")
+            //const res = await axiosInstance.get("/exp/expbyuserid?sort="+sort)
+            const res = await axiosInstance.get(`/exp/expbyuserid?sort=${sort}&date=${dateSort}`)
             setExpenses(res.data.data)
             console.log(res.data.data)
         } catch (err) {
@@ -21,15 +25,17 @@ export const MyExpenses = () => {
         const res = await axiosInstance.get("/exp/search?expName="+e.target.value)
         console.log(res.data.data) //sa -->[]
         setExpenses(res.data.data) //replace with search data [1]
-        
+ 
         
     }
 
    
     useEffect(() => {
+        alert("use effect...")
         getMyExpenses()
-    }, [])
+    }, [sort,dateSort])
 
+    
     return (
         <div className="min-h-screen bg-slate-950 py-12 px-4 sm:px-6 lg:px-8 text-slate-200">
             <div className="max-w-7xl mx-auto">
@@ -51,8 +57,14 @@ export const MyExpenses = () => {
                                 <tr className="bg-slate-800/50 border-b border-slate-700">
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400">Title</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400">Description</th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400 text-right">Amount</th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400">Date</th>
+                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400 text-right">Amount
+                                    <button onClick={()=>{setsort(1)}}><ArrowUp /></button>
+                                    <button onClick={()=>{setsort(-1)}}><ArrowDown /></button>
+                                    </th>
+                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400">Date
+                                        <button onClick={()=>{setdateSort(1)}}><ArrowUp /></button>
+                                        <button onClick={()=>{setdateSort(-1)}}><ArrowDown /></button>
+                                    </th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400">Category</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400">Mode</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-400 text-center">Actions</th>
