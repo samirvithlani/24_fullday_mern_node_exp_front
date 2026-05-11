@@ -12,7 +12,11 @@ export const MyExpenses = () => {
         try {
             //const res = await axiosInstance.get("/exp/expbyuserid?sort="+sort)
             const res = await axiosInstance.get(`/exp/expbyuserid?sort=${sort}&date=${dateSort}`)
-            setExpenses(res.data.data)
+            if (res.data && Array.isArray(res.data.data)) {
+                setExpenses(res.data.data)
+            } else {
+                setExpenses([])
+            }
             console.log(res.data.data)
         } catch (err) {
             console.error("Error fetching expenses", err)
@@ -24,14 +28,18 @@ export const MyExpenses = () => {
         console.log(e.target.value)
         const res = await axiosInstance.get("/exp/search?expName="+e.target.value)
         console.log(res.data.data) //sa -->[]
-        setExpenses(res.data.data) //replace with search data [1]
+        if (res.data && Array.isArray(res.data.data)) {
+            setExpenses(res.data.data)
+        } else {
+            setExpenses([])
+        }
  
         
     }
 
    
     useEffect(() => {
-        alert("use effect...")
+        
         getMyExpenses()
     }, [sort,dateSort])
 
@@ -42,7 +50,7 @@ export const MyExpenses = () => {
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-extrabold text-white tracking-tight">My Expenses</h1>
                     <span className="px-4 py-1 bg-indigo-500/10 text-indigo-400 rounded-full text-sm font-medium border border-indigo-500/20">
-                        Total Records: {expenses.length}
+                        Total Records: {expenses?.length || 0}
                     </span>
                 </div>
                 <div>
@@ -77,7 +85,7 @@ export const MyExpenses = () => {
                                             Loading your expenses...
                                         </td>
                                     </tr>
-                                ) : expenses.length === 0 ? (
+                                ) : !expenses || expenses.length === 0 ? (
                                     <tr>
                                         <td colSpan="7" className="px-6 py-12 text-center text-slate-500 italic">
                                             No expenses found.

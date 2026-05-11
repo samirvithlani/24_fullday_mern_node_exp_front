@@ -3,9 +3,13 @@ import axios from '../api/axiosInstance'
 
 export const GetMyCategories = () => {
   const [categories, setCategories] = useState([])
-    const getAllCategories = async()=>{
+    const getAllCategories = async () => {
         const res = await axios.get("/expCat/userCategory") //token
-        setCategories(res.data.data)
+        if (res.data && Array.isArray(res.data.data)) {
+            setCategories(res.data.data)
+        } else {
+            setCategories([])
+        }
     }
     useEffect(()=>{
         getAllCategories()
