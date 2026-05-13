@@ -3,6 +3,8 @@ import axios from '../api/axiosInstance'
 
 export const GetMyCategories = () => {
   const [categories, setCategories] = useState([])
+  const [selectedCategory, setselectedCategory] = useState("income")
+
     const getAllCategories = async () => {
         const res = await axios.get("/expCat/userCategory") //token
         if (res.data && Array.isArray(res.data.data)) {
@@ -11,9 +13,21 @@ export const GetMyCategories = () => {
             setCategories([])
         }
     }
+    const getAllIncomeCategories = async()=>{
+      const res = await axios.get("/incomeCat/incomeCategory") //token
+        if (res.data && Array.isArray(res.data.data)) {
+            setCategories(res.data.data)
+        } else {
+            setCategories([])
+        }
+    }
     useEffect(()=>{
-        getAllCategories()
-    },[])
+        if(selectedCategory == "expense"){
+            getAllCategories()
+        }else{
+            getAllIncomeCategories()
+        }
+    },[selectedCategory])
     const deleteCategory = async(id)=>{
 
       try{
@@ -29,7 +43,13 @@ export const GetMyCategories = () => {
   return (
     <div className="container mx-auto">
       <h1 className="text-3xl font-bold mb-6">My Categories</h1>
-
+       <div className="flex">
+          <label>SELECT CATEGORY TYPE</label>
+          <select onChange={(e)=>setselectedCategory(e.target.value)}>
+            <option value="expense">EXPENSE</option>
+            <option value="income">INCOME</option>
+          </select>
+       </div>
       <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
         <thead className="bg-gray-50">
           <tr>
