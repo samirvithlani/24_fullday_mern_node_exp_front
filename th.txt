@@ -13,3 +13,48 @@ dashboard ---> add expense --> view expense --> edit expense --> delete expense,
 
 ADMIN:
 USER:
+
+-----------------------------------------------------------------
+15-05-2026 implmn
+
+
+
+add expense [fe] --> type
+on basic of type -->income cat exp cat -->2 function --> use effect condtion check
+
+submit handler:
+income selected--->
+
+          data.income = data.amount
+          delete data.amount
+          data.incomeCategory = data.expCat
+          delete data.expCat
+
+----------------------------------->
+
+myexpense
+
+type:
+add one more query param -->typr
+const res = await axiosInstance.get(`/exp/expbyuserid?sort=${sort}&date=${dateSort}&type=${type}`)
+
+-->backend api expense conteoller
+change in query based on condition
+
+
+----->
+
+frontend myexpense component
+to display income and amount dynamic
+
+<td className="px-6 py-4 whitespace-nowrap text-right font-mono text-emerald-400">
+                                                ${parseFloat(type=="expense"?ex.amount:ex.income).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                            </td>
+to display incomecat and exp dynamic
+
+
+  <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className="px-3 py-1 bg-slate-800 text-indigo-300 rounded-lg text-sm border border-slate-700">
+                                                    {type == "expense"?ex.expCat?.catName?.toUpperCase() :ex.incomeCategory?.catName?.toUpperCase() || 'Uncategorized'}
+                                                </span>
+                                            </td>

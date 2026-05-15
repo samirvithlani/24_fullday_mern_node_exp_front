@@ -7,11 +7,12 @@ export const MyExpenses = () => {
     const [loading, setLoading] = useState(true)
     const [sort, setsort] = useState(1)
     const [dateSort, setdateSort] = useState(1)
+    const [type, settype] = useState("expense")
 
     const getMyExpenses = async () => {
         try {
             //const res = await axiosInstance.get("/exp/expbyuserid?sort="+sort)
-            const res = await axiosInstance.get(`/exp/expbyuserid?sort=${sort}&date=${dateSort}`)
+            const res = await axiosInstance.get(`/exp/expbyuserid?sort=${sort}&date=${dateSort}&type=${type}`)
             if (res.data && Array.isArray(res.data.data)) {
                 setExpenses(res.data.data)
             } else {
@@ -41,7 +42,7 @@ export const MyExpenses = () => {
     useEffect(() => {
         
         getMyExpenses()
-    }, [sort,dateSort])
+    }, [sort,dateSort,type])
 
     
     return (
@@ -56,6 +57,13 @@ export const MyExpenses = () => {
                 <div>
                     <label>Search</label>
                     <input type="text" onChange={(e)=>{searchHanlder(e)}}></input>
+                    </div>
+                    <div>
+                        <label>TYPE</label>
+                        <select onChange={(e)=>settype(e.target.value)}>
+                            <option value="expense">EXPENSE</option>
+                            <option value="income">INCOME</option>
+                        </select>
                     </div>
 
                 <div className="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
@@ -99,14 +107,14 @@ export const MyExpenses = () => {
                                                 {ex.description || '---'}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right font-mono text-emerald-400">
-                                                ${parseFloat(ex.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                                ${parseFloat(type=="expense"?ex.amount:ex.income).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-slate-400">
                                                 {new Date(ex.expenseDate).toLocaleDateString()}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className="px-3 py-1 bg-slate-800 text-indigo-300 rounded-lg text-sm border border-slate-700">
-                                                    {ex.expCat?.catName?.toUpperCase() || 'Uncategorized'}
+                                                    {type == "expense"?ex.expCat?.catName?.toUpperCase() :ex.incomeCategory?.catName?.toUpperCase() || 'Uncategorized'}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">

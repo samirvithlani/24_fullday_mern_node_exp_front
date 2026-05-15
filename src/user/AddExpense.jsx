@@ -9,20 +9,39 @@ export const AddExpense = () => {
     const [categories, setcategories] = useState([])
     const [selectedFile, setselectedFile] = useState("")
     const navigate = useNavigate()
+    const [selectedType, setselectedType] = useState("expense")
 
-    const getMyCategories = async()=>{
+    const getMyExpCategories = async()=>{
         const res = await axiosInstance.get("/expCat/userCategory")
+        console.log(res.data.data)
+        setcategories(res.data.data)
+    }
+    const getMyIncomeCategories = async()=>{
+        const res = await axiosInstance.get("/incomeCat/incomeCategory")
         console.log(res.data.data)
         setcategories(res.data.data)
     }
 
     useEffect(()=>{
-        getMyCategories()
-    },[])
+      if(selectedType == "expense"){
+        getMyExpCategories()
+      }else{
+        getMyIncomeCategories()
+      }
+    },[selectedType])
 
     const submitHandler = async(data)=>{
+      //data.amount
      try{
         console.log(data)
+        if(selectedType =="income"){
+          alert("income")
+          data.income = data.amount
+          delete data.amount
+          data.incomeCategory = data.expCat
+          delete data.expCat
+          
+        }
         const res = await axiosInstance.post("/exp/",data)
         console.log(res) //expid _id
         if(res.status==201){
@@ -68,6 +87,13 @@ export const AddExpense = () => {
             Fill in the details below to track your spending
           </p>
         </div>
+        <div className="flex">
+          <label>SELECT CATEGORY TYPE</label>
+          <select onChange={(e)=>setselectedType(e.target.value)}>
+            <option value="expense">EXPENSE</option>
+            <option value="income">INCOME</option>
+          </select>
+        </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(submitHandler)}>
           <div className="space-y-4">
             <div className="flex flex-col space-y-1">
@@ -95,6 +121,7 @@ export const AddExpense = () => {
                 className="w-full px-4 py-3 rounded-xl border-2 border-primary-50 focus:border-primary-400 focus:ring-4 focus:ring-primary-100 transition-all outline-none bg-white text-text-base"
               />
             </div>
+
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex flex-col space-y-1">
